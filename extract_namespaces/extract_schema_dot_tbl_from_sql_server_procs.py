@@ -198,4 +198,3 @@ if tbl_to_view:
 output_file.write("=====================================================================================================================" + "\n")
 output_file.close()
 print("output file saved at: " + output_location_with_file_name)
-

@@ -19,8 +19,8 @@ import os
 # 1) give folder level path in variable folder_path.
 # 2) dont use forword slash at the end of folder_path string.
 # 3) give output location and file name as desired.
-folder_path = 'C:/Users/SRP2593/humana_python/extract_namespaces/snowflake/input'
-output_location_with_file_name = 'C:/Users/SRP2593/humana_python/extract_namespaces/snowflake/output/output.txt'
+folder_path = 'snowflake/input'
+output_location_with_file_name = 'snowflake/output/output.txt'
 # ============================================================================================================================
 
 

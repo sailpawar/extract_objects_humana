@@ -1,0 +1,214 @@
+
+
+USE TranscendAnalytics
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+
+
+
+
+CREATE PROCEDURE dbo.ifm_Transfer_CCS_United_Elite
+
+
+
+AS
+BEGIN
+
+
+	SET NOCOUNT ON;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+delete from CDO_FINANCE.CDO.ServiceFund_IFM_All
+where InsuranceCompany = 'united'  and Company = 'Elite'
+
+
+
+INSERT INTO CDO_FINANCE.CDO.ServiceFund_IFM_All
+                         (InsuranceCompany, InsuranceCompanyID, OfficeName, SFPCPName, PCPLastName, PCPFirstName, PCPID, MemberID, MCARE_ID, Cov_Month, Close_Month, RiskScoreC, CMSFundingA, CMSFundingB, CMSFundingC,
+                         CMSFundingD, CMSTotalFunding, FPGFundingA, FPGFundingB, FPGFundingC, FPGFundingD, PartDReserve, FPGTotalFunding, SpecCap, PCPCap, ClaimsPartA, ClaimsPartA_IP, ClaimsPartA_OP, ClaimsPartA_Other,
+                         ClaimsPartB, ProfClaims, RX_B_Claims, RX_D_Claims, RX_Rebates, RX_Stoploss, RX_LICS, RX_Quality, RX_GDCA, RX_REP_GAP_DSCNT, RX_RISK_CORRIDOR, RX_D__EXP, TotalClaims, StopLossFee, ReinRecoveries,
+                         Adjustment, FactorMonth, IBNRPartA, IBNRPartB, IBNR, Tot_Exp, Net, MemberName, SFBirthDate, SFGender, Hospice, ESRD, Institutional, NursingHomeCertifiable, PreviouslyDisabled, CurrentMember, Level, LOB, PlanCode,
+                         PlanName, IPAName, PBP, Age, ProductType, Product, Contract, Company, LoadDate, Market, Cohort, Region, Org, TotalExpenses)
+SELECT        InsuranceCompany, InsuranceCompanyID, OfficeName, SFPCPName, PCPLastName, PCPFirstName, PCPID, MemberID, MCARE_ID, Cov_Month, Close_Month, RiskScoreC, CMSFundingA, CMSFundingB, CMSFundingC,
+                         CMSFundingD, CMSTotalFunding, ProviderFundingA, ProviderFundingB, ProviderFundingC, ProviderFundingD, PartDReserve, ProviderTotalFunding, SpecCap, PCPCap, ClaimsPartA, ClaimsPartA_IP, ClaimsPartA_OP,
+                         ClaimsPartA_Other, ClaimsPartB, ProfClaims, RX_B_Claims, RX_D_Claims, RX_Rebates, RX_Stoploss, RX_LICS, RX_Quality, RX_GDCA, RX_REP_GAP_DSCNT, RX_RISK_CORRIDOR, RX_D__EXP, TotalClaims, StopLossFee,
+                         ReinRecoveries, Adjustment, FactorMonth, IBNRPartA, IBNRPartB, IBNR, TotalExpenses AS Tot_Exp, Net, MemberName, SFBirthDate, SFGender, Hospice, ESRD, Institutional, NursingHomeCertifiable, PreviouslyDisabled,
+                         CurrentMember, Level, LOB, PlanCode, PlanName, IPAName, PBP, Age, ProductType, Product, Contract, Company, GETDATE(), Market, Cohort, Region, Org, TotalExpenses
+FROM            STG.IFM_ServiceFund_United_Elite
+WHERE        (InsuranceCompany = 'united') AND (Company = 'Elite')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO CDO_FINANCE.CDO.Provider_Margin_IFM
+                         (Close_Month, Coverage_Month, Insurance_Company, Facility_Name, SF_PCP_Nname, PCP_ID, Description, Amount, Company, Product, Grouper_ID, Upside, Downside, Risk, Risk_Type, Market, Taxonomy, LOADDATE)
+SELECT        Close_Month, Coverage_Month, Insurance_Company, Facility_Name, SF_PCP_Nname, PCP_ID, Description, Amount, Company, Product, Grouper_ID, Upside, Downside, Risk, Risk_Type, Market, Taxonomy, GETDATE()
+FROM            Provider_Margin_CCS_IFM
+WHERE        (Insurance_Company = 'united') AND (Company IN ('Elite'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO CDO_FINANCE.CDO.CCS_Claims_Triangle_POT
+                         (PAYER, COV_MONTH, PAID_MONTH, PAID_AMT, CLAIM_CLASS, CLOSE_MONTH, UPDATE_DATE, Company, PRODUCT, PCP_ID, Facility_Name, POT_CD, POT_CD_DESC, TAXONOMY)
+SELECT        PAYER, COV_MONTH, PAID_MONTH, PAID_AMT, CLAIM_CLASS, CLOSE_MONTH, GETDATE(), Company, PRODUCT, PCP_ID, Facility_Name, POT_CD, POT_CD_DESC, TAXONOMY
+FROM            STG.CLM_TRIANGLE_CCS_POT
+WHERE        (PAYER = 'united') AND (Company IN ('Elite'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO CDO_FINANCE.dbo.STG_CLM_TRIANGLE_Test_POT_With_Count
+                         (PAYER, COV_MONTH, PAID_MONTH, PAID_AMT, CLAIM_CLASS, CLOSE_MONTH, UPDATE_DATE, Company, PRODUCT, PCP_ID, Facility_Name, POT_CD, POT_CD_DESC, TAXONOMY, ClaimCount)
+SELECT        Payer, Cov_Month, Paid_Month, Paid_Amount, Claim_Class, Close_Month, GETDATE() AS Expr1, Company, Product, PCPID, OfficeName, POS, POSDescription, Taxonomy, Claim_Count
+FROM            STG_CLM_TRIANGLE_Test_POT_With_Count AS STG_CLM_TRIANGLE_Test_POT_With_Count_1
+WHERE        (Payer = 'united') AND (Company IN ('Elite'))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO CDO_FINANCE.ifm.CCS_triangle
+                         (PAYER, COV_MONTH, PAID_MONTH, PAID_AMT, CLAIM_CLASS, CLOSE_MONTH, UPDATE_DATE, Company, PRODUCT, PCP_ID, Facility_Name, POT_CD, POT_CD_DESC, TAXONOMY)
+SELECT        PAYER, COV_MONTH, PAID_MONTH, PAID_AMT, CLAIM_CLASS, CLOSE_MONTH, GETDATE(), Company, PRODUCT, PCP_ID, Facility_Name, POT_CD, POT_CD_DESC, TAXONOMY
+FROM            STG.CLM_TRIANGLE_CCS_POT
+WHERE        (PAYER = 'united')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO cdo_finance.ifm.CCS_triangle_utilization
+            (PAYER, CLOSE_MONTH, COV_MONTH, PAID_MONTH, PAID_AMT, Company, PCP_ID, POT_CD, CLAIM_CLASS, UPDATE_DATE, PRODUCT, ClaimCount, TAXONOMY)
+SELECT        Payer, Close_Month, Cov_Month, Paid_Month, SUM(CAST(Paid_Amount AS float)) AS Expr2, Company, PCPID, POS, Claim_Class, GETDATE(), Product, SUM(Claim_Count) AS Expr3, Taxonomy
+FROM            STG_CLM_TRIANGLE_Test_POT_With_Count
+WHERE        (Payer = 'united')
+GROUP BY Payer, Close_Month, Cov_Month, Paid_Month, Company, PCPID, POS, Claim_Class, UpdateDate, Product, Taxonomy
+
+
+
+
+
+DECLARE @XML NVARCHAR(MAX)
+DECLARE @BODY_Start NVARCHAR(MAX)
+DECLARE @Table_START NVARCHAR(MAX)
+DECLARE @Table_End NVARCHAR(MAX)
+DECLARE @BODY_End NVARCHAR(MAX)
+DECLARE @BODY NVARCHAR(MAX)
+DECLARE @NoNullFacilities NVARCHAR(MAX)
+
+

@@ -16,8 +16,8 @@ import os
 # 4) find what is the encoding format if files in source_folder_path, all files in source_folder_path must have same encoding
 # 5) if you want temporary tables included in output list or not (tables that start with # while creation)
 
-source_folder_path = 'C:/Users/SRP2593/humana_python/extract_namespaces/sql_server/original_copy'
-junk_folder_path = 'C:/Users/SRP2593/humana_python/extract_namespaces/sql_server/junk'
+source_folder_path = 'sql_server/original_copy'
+junk_folder_path = 'sql_server/junk'
 output_location_with_file_name = 'sql_server/output/output_file.txt'
 source_files_encoding = 'utf-16' # utf-8, utf-16, etc
 exclude_temporary_tables = 0  #  1 = yes, 0 = no

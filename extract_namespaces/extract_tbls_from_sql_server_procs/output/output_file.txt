@@ -1,0 +1,12 @@
+=====================================================================================================================
+
+junk\input.txt
+
+phm_dds.dds.dds_data_feed_event
+phm_dds.dds.dds_data
+transcendanalytics.cdo.servicefund_ifm_cw
+cdo_finance.ifm.market
+cdo_finance.ifm.providermargin_businessmapping
+transcendanalytics.dbo.uhc_pipc_nc_triangle
+transcendanalytics.cdo.servicefund_ifm_cw_all
+=====================================================================================================================
